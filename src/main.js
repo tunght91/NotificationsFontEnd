@@ -9,8 +9,18 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
 
-// todo
-// cssVars()
+import ApiService from './services/api.service'
+import { TokenService } from './services/storage.service'
+
+// Set the base URL of the API
+ApiService.init(process.env.VUE_APP_ROOT_API)
+
+// If token exists set header
+if (TokenService.getToken()) {
+  ApiService.setHeader()
+}
+
+
 
 Vue.use(BootstrapVue)
 
