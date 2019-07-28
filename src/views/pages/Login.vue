@@ -58,6 +58,10 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import userService from "../../services/user.service";
+import { async } from 'q';
+import { debug } from 'util';
+
+
 export default {
   name: "Login",
   data() {
@@ -67,23 +71,28 @@ export default {
     };
   },
 
+
   methods: {
-    onSubmit(evt) {
+     async onSubmit (evt) {
       try {
         if (this.email != "" && this.password != "") {
-          this.userService.login({
+          await userService.login({
             email: this.email,
             password: this.password
           });
+            this.$router.replace({path: '/notifications'})
         }
+
       } catch (error) {
-        alert(JSON.stringify(error));
+        // alert(JSON.stringify(error.toString));
       }
     },
     onRegister(evt) {
       evt.preventDefault();
       this.$router.push("/register");
-    }
+    },
+
+    
   }
 };
 </script>

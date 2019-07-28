@@ -1,5 +1,6 @@
 const TOKEN_KEY = 'access_token'
 const REFRESH_TOKEN_KEY = 'refresh_token'
+const EMAIL_KEY = 'email'
 /**
  * Manage the how Access Tokens are being stored and retreived from storage.
  *
@@ -8,6 +9,15 @@ const REFRESH_TOKEN_KEY = 'refresh_token'
 **/
 
 const TokenService = {
+    getEmail(){
+        return localStorage.getItem(EMAIL_KEY)
+    },
+    saveEmail(){
+        return localStorage.setItem(EMAIL_KEY)
+    },
+    removeEmail(){
+        localStorage.removeItem(EMAIL_KEY)
+    },
 
     getToken() {
         return localStorage.getItem(TOKEN_KEY)

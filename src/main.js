@@ -13,7 +13,7 @@ import ApiService from './services/api.service'
 import { TokenService } from './services/storage.service'
 
 // Set the base URL of the API
-ApiService.init(process.env.VUE_APP_ROOT_API)
+ApiService.init('http://0.0.0.0:3000');
 
 // If token exists set header
 if (TokenService.getToken()) {

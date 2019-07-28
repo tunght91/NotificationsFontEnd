@@ -19,14 +19,14 @@ const UserService = {
      * @returns access_token
      * @throws AuthenticationError 
     **/
-    login: async function(email, password) {
-        console.log(email);
+    login: async function(param) {
+        const {email,password} = param
         const requestData = {
             method: 'post',
-            url: "/login",
+            url: "/auth",
             data: {
                 grant_type: 'password',
-                username: email,
+                email: email,
                 password: password
             },
             auth: {
@@ -36,17 +36,22 @@ const UserService = {
         }
 
         try {
-            const response = await ApiService.customRequest(requestData)
-            TokenService.saveToken(response.data.access_token)
-            TokenService.saveRefreshToken(response.data.refresh_token)
+            debugger
+            const response = await ApiService.customRequest(requestData) 
+            // TokenService.saveEmail(email)
+            TokenService.saveToken(response.data.accessToken)
+            TokenService.saveRefreshToken(response.data.refreshToken)
             ApiService.setHeader()
-            
+           
+            debugger
             // NOTE: We haven't covered this yet in our ApiService 
             //       but don't worry about this just yet - I'll come back to it later
-            ApiService.mount401Interceptor();
+            // ApiService.mount401Interceptor();
 
             return response.data.access_token
         } catch (error) {
+            console.log(error)
+            debugger
             return new AuthenticationError(error.response.status, error.response.data.detail)
             // throw new AuthenticationError(error.response.status, error.response.data.detail)
         }
@@ -72,6 +77,7 @@ const UserService = {
         }
 
         try {
+            debugger;
             const response = await ApiService.customRequest(requestData)
 
             TokenService.saveToken(response.data.access_token)
@@ -94,10 +100,11 @@ const UserService = {
         // Remove the token and remove Authorization header from Api Service as well 
         TokenService.removeToken()
         TokenService.removeRefreshToken()
+        TokenService.removeEmail()
         ApiService.removeHeader()
         
         // NOTE: Again, we'll cover the 401 Interceptor a bit later. 
-        ApiService.unmount401Interceptor()
+        // ApiService.unmount401Interceptor()
     }
 }
 

@@ -8,11 +8,11 @@ const ApiService = {
       _401interceptor: null,
 
     init(baseURL) {
-        axios.defaults.baseURL = baseURL;
+        axios.defaults.baseURL = 'http://0.0.0.0:3000';
     },
 
     setHeader() {
-        axios.defaults.headers.common["Authorization"] = `Bearer ${TokenService.getToken()}`
+        axios.defaults.headers.common["Authorization"] = `${TokenService.getToken()}`
     },
 
     removeHeader() {
@@ -46,8 +46,9 @@ const ApiService = {
      *    - username
      *    - password
     **/
-    customRequest(data) {
-        return axios(data)
+   async customRequest (data) {
+        return await axios(data)
+        
     },
 
     mount401Interceptor() {
