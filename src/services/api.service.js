@@ -8,7 +8,7 @@ const ApiService = {
       _401interceptor: null,
 
     init(baseURL) {
-        axios.defaults.baseURL = 'http://0.0.0.0:3000';
+        axios.defaults.baseURL = 'https://tomo-notification.herokuapp.com';
     },
 
     setHeader() {
@@ -47,8 +47,9 @@ const ApiService = {
      *    - password
     **/
    async customRequest (data) {
-        return await axios(data)
-        
+
+       return await axios(data);
+
     },
 
     mount401Interceptor() {

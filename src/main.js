@@ -13,7 +13,7 @@ import ApiService from './services/api.service'
 import { TokenService } from './services/storage.service'
 
 // Set the base URL of the API
-ApiService.init('http://0.0.0.0:3000');
+ApiService.init('https://tomo-notification.herokuapp.com');
 
 // If token exists set header
 if (TokenService.getToken()) {

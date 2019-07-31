@@ -5,7 +5,7 @@
         <b-col md="6">
             <b-card no-body class="p-4">
               <b-card-body>
-                <b-form @submit="onSubmit">
+                <b-form @submit.prevent="onSubmit">
                   <h1>Login</h1>
                   <p class="text-muted">Sign In to your account</p>
                   <b-input-group class="mb-3">

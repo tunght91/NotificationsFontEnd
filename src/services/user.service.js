@@ -25,24 +25,19 @@ const UserService = {
             method: 'post',
             url: "/auth",
             data: {
-                grant_type: 'password',
                 email: email,
                 password: password
-            },
-            auth: {
-                username: process.env.VUE_APP_CLIENT_ID,
-                password: process.env.VUE_APP_CLIENT_SECRET
             }
         }
 
         try {
             debugger
+           
             const response = await ApiService.customRequest(requestData) 
             // TokenService.saveEmail(email)
             TokenService.saveToken(response.data.accessToken)
             TokenService.saveRefreshToken(response.data.refreshToken)
             ApiService.setHeader()
-           
             debugger
             // NOTE: We haven't covered this yet in our ApiService 
             //       but don't worry about this just yet - I'll come back to it later
