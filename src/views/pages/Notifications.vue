@@ -1,11 +1,7 @@
 <template>
-
   <b-row>
-      
     <b-col cols="12">
-       
       <transition name="slide">
-        
         <b-card>
           <div slot="header" v-html="caption"></div>
           <b-table
@@ -28,7 +24,11 @@
               <strong>{{data.item.name}}</strong>
             </template>
             <template slot="isPush" slot-scope="data">
-              <b-badge :variant="getBadge(data.item.isPush)">{{data.item.isPush}}</b-badge>
+              <span v-if="data.item.isPush" class="badge badge-success">Pushed</span>
+              <span v-else class="badge badge-secondary">NO</span>
+            </template>
+            <template slot="linkTo" slot-scope="data">
+              <a :href="data.item.linkTo" target="_blank">{{data.item.linkTo}}</a>
             </template>
           </b-table>
           <nav>
@@ -50,11 +50,9 @@
 <script>
 import NotificaionService from "../../services/notifications.service";
 import usersData from "../users/UsersData";
-import { async } from 'q';
+import { async } from "q";
 
-import moment from 'moment'
-
-
+import moment from "moment";
 
 export default {
   name: "List",
@@ -88,26 +86,23 @@ export default {
     return {
       items: [],
       fields: [
-        {key: "createdAt" },
+        { key: "createdAt" },
         { key: "title" },
         { key: "shortDescription" },
-        { key: "content" },
         { key: "linkTo" },
         { key: "isPush" }
       ],
       currentPage: 1,
-      perPage: 5,
+      perPage: 10,
       totalRows: 0
     };
   },
-  created(){
-      this.loadData()
-      
+  created() {
+    this.loadData();
   },
   methods: {
     getBadge(status) {
-        return status === true ? 'success' : 'Pendding';
-   
+      return status === true ? "success" : "Pendding";
     },
     getRowCount(items) {
       return items.length;
@@ -116,19 +111,21 @@ export default {
       return `notifications/${id.toString()}`;
     },
     rowClicked(item) {
-      const userLink = this.userLink(item.id);
+      const userLink = this.userLink(item._id);
       this.$router.push({ path: userLink });
     },
-     loadData: async function  () {
+    loadData: async function() {
       try {
-        var respones = await NotificaionService.list({page: this.currentPage, limit:this.perPage});
-        this.items = respones.data
+        var respones = await NotificaionService.list({
+          page: this.currentPage,
+          limit: this.perPage
+        });
+        this.items = respones.data;
       } catch (error) {}
     },
-    dateformat(value){
-        return moment(String(value)).format('MM/DD/YYYY hh:mm')
+    dateformat(value) {
+      return moment(String(value)).format("MM/DD/YYYY hh:mm");
     }
-   
   }
 };
 </script>

@@ -8,13 +8,7 @@
           label-for="title"
           :label-cols="3"
         >
-          <b-form-input
-            id="title"
-            type="text"
-            required
-            v-model="title"
-            placeholder=" Input Text"
-          ></b-form-input>
+          <b-form-input id="title" type="text" required v-model="title" placeholder=" Input Text"></b-form-input>
         </b-form-group>
         <b-form-group
           description="Short description"
@@ -30,48 +24,35 @@
             placeholder=" Input short description"
           ></b-form-input>
         </b-form-group>
-        <b-form-group description="Link to" label="LinkTo (optional)" label-for="linkTo" :label-cols="3">
-          <b-form-input id="linkTo" type="text" v-model="linkTo" placeholder=" Link to"></b-form-input>
+        <b-form-group
+          description="Link to"
+          label="LinkTo (optional)"
+          label-for="linkTo"
+          :label-cols="3"
+        >
+          <b-form-input
+            id="linkTo"
+            type="url"
+            v-model="linkTo"
+            placeholder=" Link to"
+            @change="changeLinkTo"
+          ></b-form-input>
+          <div class="card" style="width: 18rem; margin-top: 10px;" v-if="isShowLinkPreview">
+            <img class="card-img-top" alt="Card image cap" :src="linkPreview.image" />
+            <div class="card-body">
+              <p class="card-text">{{linkPreview.title}}</p>
+            </div>
+          </div>
         </b-form-group>
 
         <b-form-group label="Contents (optional)" label-for="basicTextarea" :label-cols="3">
-          <b-form-textarea
-            id="basicTextarea"
-            :rows="9"
-            v-model="contents"
-            placeholder="Content.."
-          ></b-form-textarea>
+          <div>
+            <vue-simplemde :configs="this.configs" v-model="contents" ref="markdownEditor" />
+          </div>
         </b-form-group>
-        <!--custom controls - radios/checkboxes - temporary fix-->
-        <b-form-group :label-cols="3">
-          <b-form-radio-group id="basicRadiosCustom" value="1" stacked>
-            <div class="custom-control custom-radio">
-              <input
-                type="radio"
-                id="customRadio1"
-                name="Push now"
-                class="custom-control-input"
-                value="1"
-                checked
-              />
-              <label class="custom-control-label" for="customRadio1">Push now</label>
-            </div>
-            <div class="custom-control custom-radio">
-              <input
-                type="radio"
-                id="customRadio2"
-                name="Push later"
-                class="custom-control-input"
-                value="2"
-              />
-              <label class="custom-control-label" for="customRadio2">Push later</label>
-            </div>
-          </b-form-radio-group>
-        </b-form-group>
-        <!-- <div slot="footer"> -->
-     
-                      <b-button type="submit" variant="primary" class="px-4">Create</b-button>
-                    
+
+        <b-button type="submit" variant="primary" class="px-4">Create</b-button>
+
         <!-- </div> -->
       </b-form>
     </b-card>
@@ -80,24 +61,53 @@
 <script>
 import NotificationService from "../../services/notifications.service";
 import { METHODS } from "http";
-import { debug } from "util";
+import { debug, debuglog } from "util";
+
+import VueSimplemde from "vue-simplemde";
+import { link } from "fs";
 export default {
   name: "News",
+  components: {
+    VueSimplemde
+  },
   data() {
     return {
+      title: "",
+      tag: "Announcement",
+      shortDescription: "",
+      contents: "",
+      isPush: false,
+      linkTo: "",
+      type: "tomochainAnnounce",
+      configs: {
+        toolbar: [
+          "bold",
+          "italic",
+          "heading",
+          "|",
+          "quote",
+          "|",
+          "unordered-list",
+          "ordered-list",
+          "|",
+          "link",
+          "|",
+          "preview",
+          "guide"
+        ]
+      },
+      isShowLinkPreview: false,
+
+      linkPreview: {
         title: "",
-        tag:"Announce",
-        shortDescription: "",
-        contents: "",
-        isPush: true,
-        linkTo: "",
-        type:"tomochainAnnounce"
+        description: "",
+        image: ""
+      }
     };
   },
   methods: {
     async onSubmit(evt) {
-         evt.preventDefault();
-            
+      evt.preventDefault();
       try {
         var data = await NotificationService.create({
           title: this.title,
@@ -106,12 +116,37 @@ export default {
           contents: this.contents,
           isPush: this.isPush,
           linkTo: this.linkTo,
-          type: this.type
+          type: this.type,
+          linkPreview: this.linkPreview
         });
-        this.$router.replace({path: '/notifications'});
-      } catch (error) {}
+        alert(JSON.stringify("Success"));
+        this.$router.replace({ path: "/notifications" });
+      } catch (error) {
+        alert(JSON.stringify(error.toString));
+      }
+    },
+    changeLinkTo: async function() {
+      debugger;
+      if (this.linkTo === undefined || this.linkTo.length === 0) {
+        this.isShowLinkPreview = false;
+        return;
+      }
+      try {
+        var data = await NotificationService.urlMetaData({
+          linkTo: this.linkTo
+        });
+        this.linkPreview = data.data;
+        console.log(this.linkPreView);
+        this.isShowLinkPreview = true;
+      } catch (error) {
+        this.isShowLinkPreview = false;
+        alert(JSON.stringify(error.message));
+      }
     }
   }
 };
 </script>
+<style>
+@import "~simplemde/dist/simplemde.min.css";
+</style>
 

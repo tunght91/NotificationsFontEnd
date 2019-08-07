@@ -19,19 +19,19 @@
         />
       </b-link>
       <SidebarToggler class="d-md-down-none" display="lg" :defaultOpen="true" />
-      <b-navbar-nav class="d-md-down-none">
+      <!-- <b-navbar-nav class="d-md-down-none">
         <b-nav-item class="px-3" to="/dashboard">Dashboard</b-nav-item>
         <b-nav-item class="px-3" to="/users" exact>Users</b-nav-item>
         <b-nav-item class="px-3">Settings</b-nav-item>
-      </b-navbar-nav>
+      </b-navbar-nav>-->
       <b-navbar-nav class="ml-auto">
         <b-button variant="secondary" outline v-on:click="logout">
-              <i class="icon-power"></i>&nbsp;Logout
-            </b-button>
+          <i class="icon-power"></i>&nbsp;Logout
+        </b-button>
         <!-- <span class="ml-1">{{this.email}}</span>
         <b-nav-item v-on:click="logout" class="d-md-down-none">
           <i class="icon-power"></i>
-        </b-nav-item> -->
+        </b-nav-item>-->
       </b-navbar-nav>
     </AppHeader>
     <div class="app-body">
@@ -80,8 +80,8 @@ import {
   Breadcrumb
 } from "@coreui/vue";
 import DefaultAside from "./DefaultAside";
-import { debug } from 'util';
-import UserService from '../services/user.service'
+import { debug } from "util";
+import UserService from "../services/user.service";
 
 export default {
   name: "DefaultContainer",
@@ -118,11 +118,10 @@ export default {
   },
   methods: {
     logout: function(evt) {
-      UserService.logout()
-        this.$router.push("/login");
+      UserService.logout();
+      this.$router.push("/login");
 
       // alert(JSON.stringify("heheh"));
-
     }
   }
 };
