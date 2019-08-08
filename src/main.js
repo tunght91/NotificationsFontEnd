@@ -18,7 +18,7 @@ import "simplemde/dist/simplemde.min.css";
 Vue.component("vue-simplemde", VueSimplemde);
 
 // Set the base URL of the API
-ApiService.init("http://0.0.0.0:3000");
+ApiService.init("https://wallet.tomochain.com/services/news");
 
 // If token exists set header
 if (TokenService.getToken()) {
